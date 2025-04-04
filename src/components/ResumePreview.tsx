@@ -7,35 +7,35 @@ interface ResumePreviewProps {
 }
 
 const ResumePreview = ({ resumeData }: ResumePreviewProps) => {
-  const { personalInfo, experiences, education, skills, projects } = resumeData;
+  const { personalInfo, experiences = [], education = [], skills = [], projects = [] } = resumeData || {};
 
   return (
     <div className="resume-preview animate-fade-in">
       <div className="border-b-2 border-resume-primary pb-4">
         <h1 className="text-2xl font-bold text-resume-primary">
-          {personalInfo.fullName || "Your Name"}
+          {personalInfo?.fullName || "Your Name"}
         </h1>
         <h2 className="text-lg text-resume-secondary font-medium mt-1">
-          {personalInfo.title || "Your Job Title"}
+          {personalInfo?.title || "Your Job Title"}
         </h2>
 
         <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-sm text-gray-600">
-          {personalInfo.email && <div>{personalInfo.email}</div>}
-          {personalInfo.phone && <div>{personalInfo.phone}</div>}
-          {personalInfo.location && <div>{personalInfo.location}</div>}
-          {personalInfo.linkedin && <div>{personalInfo.linkedin}</div>}
-          {personalInfo.website && <div>{personalInfo.website}</div>}
+          {personalInfo?.email && <div>{personalInfo.email}</div>}
+          {personalInfo?.phone && <div>{personalInfo.phone}</div>}
+          {personalInfo?.location && <div>{personalInfo.location}</div>}
+          {personalInfo?.linkedin && <div>{personalInfo.linkedin}</div>}
+          {personalInfo?.website && <div>{personalInfo.website}</div>}
         </div>
       </div>
 
-      {personalInfo.summary && (
+      {personalInfo?.summary && (
         <div className="mt-4">
           <h3 className="text-md font-bold text-resume-primary mb-2">Summary</h3>
           <p className="text-sm">{personalInfo.summary}</p>
         </div>
       )}
 
-      {experiences.length > 0 && (
+      {experiences && experiences.length > 0 && (
         <div className="mt-4">
           <h3 className="text-md font-bold text-resume-primary mb-2">
             Professional Experience
@@ -70,7 +70,7 @@ const ResumePreview = ({ resumeData }: ResumePreviewProps) => {
         </div>
       )}
 
-      {projects.length > 0 && (
+      {projects && projects.length > 0 && (
         <div className="mt-4">
           <h3 className="text-md font-bold text-resume-primary mb-2">
             Projects
@@ -106,7 +106,7 @@ const ResumePreview = ({ resumeData }: ResumePreviewProps) => {
         </div>
       )}
 
-      {education.length > 0 && (
+      {education && education.length > 0 && (
         <div className="mt-4">
           <h3 className="text-md font-bold text-resume-primary mb-2">
             Education
@@ -141,7 +141,7 @@ const ResumePreview = ({ resumeData }: ResumePreviewProps) => {
         </div>
       )}
 
-      {skills.length > 0 && (
+      {skills && skills.length > 0 && (
         <div className="mt-4">
           <h3 className="text-md font-bold text-resume-primary mb-2">Skills</h3>
           <div className="flex flex-wrap gap-1">
