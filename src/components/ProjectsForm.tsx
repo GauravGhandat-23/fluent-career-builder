@@ -6,10 +6,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Trash2, Plus, Code } from "lucide-react";
+import { Trash2, Plus, Code, Sparkles } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
+import { generateContent } from "@/services/aiService";
+import { toast } from "sonner";
 
 interface ProjectsFormProps {
   projects: Project[];
@@ -29,6 +31,7 @@ const ProjectsForm = ({ projects, onChange, apiKey }: ProjectsFormProps) => {
   });
 
   const [isEditing, setIsEditing] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const handleAddProject = () => {
     const newProject: Project = {
@@ -73,6 +76,42 @@ const ProjectsForm = ({ projects, onChange, apiKey }: ProjectsFormProps) => {
       current: checked,
       endDate: checked ? "" : prev.endDate,
     }));
+  };
+
+  const generateProjectDescription = async () => {
+    if (!apiKey) {
+      toast.error("Please enter your GROQ API key to use AI features");
+      return;
+    }
+
+    if (!editingProject.name) {
+      toast.warning("Please enter a project name first");
+      return;
+    }
+
+    try {
+      setIsGenerating(true);
+      
+      const prompt = `Create a compelling project description for my resume with these details:
+      - Project name: ${editingProject.name}
+      ${editingProject.url ? `- Project URL: ${editingProject.url}` : ''}
+      
+      Format your response as 2-3 sentences highlighting the purpose of the project, technologies used, and key achievements or features. Focus on quantifiable results where possible. The description should be professional and concise.`;
+
+      const description = await generateContent(prompt, apiKey);
+      
+      setEditingProject(prev => ({
+        ...prev,
+        description
+      }));
+      
+      toast.success("Project description generated!");
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to generate description. Please check your API key.");
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   return (
@@ -153,7 +192,20 @@ const ProjectsForm = ({ projects, onChange, apiKey }: ProjectsFormProps) => {
           </div>
 
           <div>
-            <Label htmlFor="project-description">Project Description</Label>
+            <div className="flex justify-between items-center mb-1">
+              <Label htmlFor="project-description">Project Description</Label>
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                className="flex items-center gap-1 text-xs"
+                onClick={generateProjectDescription}
+                disabled={isGenerating}
+              >
+                <Sparkles size={14} />
+                {isGenerating ? "Generating..." : "Generate with AI"}
+              </Button>
+            </div>
             <Textarea
               id="project-description"
               placeholder="Describe your project, technologies used, and your accomplishments"
