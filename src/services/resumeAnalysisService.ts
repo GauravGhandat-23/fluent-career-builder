@@ -25,7 +25,7 @@ export interface ResumeAnalysisResult {
 export const analyzeGrammarAndATS = async (
   resumeData: ResumeData,
   apiKey: string
-): Promise<ResumeAnalysisResult["grammar"] & ResumeAnalysisResult["ats"]> => {
+): Promise<{ grammar: ResumeAnalysisResult["grammar"]; ats: ResumeAnalysisResult["ats"] }> => {
   // Create a text representation of the resume to analyze
   const resumeText = createResumeTextForAnalysis(resumeData);
 
