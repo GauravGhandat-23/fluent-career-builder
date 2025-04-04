@@ -9,7 +9,8 @@ interface AIResponse {
 
 export const generateContent = async (
   prompt: string,
-  apiKey: string
+  apiKey: string,
+  maxTokens: number = 2000
 ): Promise<string> => {
   try {
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -24,7 +25,7 @@ export const generateContent = async (
           {
             role: "system",
             content:
-              "You are an expert resume writer. Provide professional, concise content for resumes based on the information provided. Focus on achievements, skills, and experiences that make the candidate stand out.",
+              "You are an expert resume writer and career advisor. Provide professional, concise content for resumes based on the information provided. Focus on achievements, skills, and experiences that make the candidate stand out.",
           },
           {
             role: "user",
@@ -32,7 +33,7 @@ export const generateContent = async (
           },
         ],
         temperature: 0.7,
-        max_tokens: 500,
+        max_tokens: maxTokens,
       }),
     });
 

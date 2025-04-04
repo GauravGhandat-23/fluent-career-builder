@@ -7,6 +7,7 @@ import EducationForm from "@/components/EducationForm";
 import SkillsForm from "@/components/SkillsForm";
 import ProjectsForm from "@/components/ProjectsForm";
 import ResumePreview from "@/components/ResumePreview";
+import ResumeAnalysis from "@/components/ResumeAnalysis";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ResumeData } from "@/types/resume";
@@ -103,12 +104,13 @@ const Index = () => {
                 onValueChange={setActiveTab}
                 className="mb-6"
               >
-                <TabsList className="grid grid-cols-5">
+                <TabsList className="grid grid-cols-6">
                   <TabsTrigger value="personal-info">Personal</TabsTrigger>
                   <TabsTrigger value="experience">Experience</TabsTrigger>
                   <TabsTrigger value="education">Education</TabsTrigger>
                   <TabsTrigger value="skills">Skills</TabsTrigger>
                   <TabsTrigger value="projects">Projects</TabsTrigger>
+                  <TabsTrigger value="analysis">Analysis</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="personal-info" className="mt-4">
@@ -146,6 +148,13 @@ const Index = () => {
                   <ProjectsForm
                     projects={resumeData.projects}
                     onChange={updateProjects}
+                    apiKey={apiKey}
+                  />
+                </TabsContent>
+
+                <TabsContent value="analysis" className="mt-4">
+                  <ResumeAnalysis
+                    resumeData={resumeData}
                     apiKey={apiKey}
                   />
                 </TabsContent>
