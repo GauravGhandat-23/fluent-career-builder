@@ -62,4 +62,5 @@ export const defaultResumeData = {
   experiences: [],
   education: [],
   skills: [],
+  projects: [],
 };

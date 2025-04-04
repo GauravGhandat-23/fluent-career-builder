@@ -7,7 +7,7 @@ interface ResumePreviewProps {
 }
 
 const ResumePreview = ({ resumeData }: ResumePreviewProps) => {
-  const { personalInfo, experiences, education, skills } = resumeData;
+  const { personalInfo, experiences, education, skills, projects } = resumeData;
 
   return (
     <div className="resume-preview animate-fade-in">
@@ -62,6 +62,42 @@ const ResumePreview = ({ resumeData }: ResumePreviewProps) => {
                   className="text-sm mt-1"
                   dangerouslySetInnerHTML={{
                     __html: exp.description.replace(/\n/g, "<br />"),
+                  }}
+                />
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {projects.length > 0 && (
+        <div className="mt-4">
+          <h3 className="text-md font-bold text-resume-primary mb-2">
+            Projects
+          </h3>
+          {projects.map((project) => (
+            <div key={project.id} className="mb-3">
+              <div className="flex justify-between">
+                <h4 className="font-semibold">
+                  {project.name || "Project Name"}
+                  {project.url && (
+                    <span className="font-normal ml-1">
+                      (<a href={project.url} className="text-blue-600" target="_blank" rel="noreferrer">Link</a>)
+                    </span>
+                  )}
+                </h4>
+                <div className="text-sm text-gray-600">
+                  {project.startDate &&
+                    `${formatDate(project.startDate)} - ${
+                      project.current ? "Present" : formatDate(project.endDate)
+                    }`}
+                </div>
+              </div>
+              {project.description && (
+                <div
+                  className="text-sm mt-1"
+                  dangerouslySetInnerHTML={{
+                    __html: project.description.replace(/\n/g, "<br />"),
                   }}
                 />
               )}

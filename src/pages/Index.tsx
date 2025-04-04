@@ -5,6 +5,7 @@ import PersonalInfoForm from "@/components/PersonalInfoForm";
 import ExperienceForm from "@/components/ExperienceForm";
 import EducationForm from "@/components/EducationForm";
 import SkillsForm from "@/components/SkillsForm";
+import ProjectsForm from "@/components/ProjectsForm";
 import ResumePreview from "@/components/ResumePreview";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -62,6 +63,10 @@ const Index = () => {
     setResumeData((prev) => ({ ...prev, skills }));
   };
 
+  const updateProjects = (projects: ResumeData["projects"]) => {
+    setResumeData((prev) => ({ ...prev, projects }));
+  };
+
   const handleExportPDF = async () => {
     setIsGeneratingPDF(true);
     try {
@@ -98,11 +103,12 @@ const Index = () => {
                 onValueChange={setActiveTab}
                 className="mb-6"
               >
-                <TabsList className="grid grid-cols-4">
+                <TabsList className="grid grid-cols-5">
                   <TabsTrigger value="personal-info">Personal</TabsTrigger>
                   <TabsTrigger value="experience">Experience</TabsTrigger>
                   <TabsTrigger value="education">Education</TabsTrigger>
                   <TabsTrigger value="skills">Skills</TabsTrigger>
+                  <TabsTrigger value="projects">Projects</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="personal-info" className="mt-4">
@@ -132,6 +138,14 @@ const Index = () => {
                   <SkillsForm
                     skills={resumeData.skills}
                     onChange={updateSkills}
+                    apiKey={apiKey}
+                  />
+                </TabsContent>
+
+                <TabsContent value="projects" className="mt-4">
+                  <ProjectsForm
+                    projects={resumeData.projects}
+                    onChange={updateProjects}
                     apiKey={apiKey}
                   />
                 </TabsContent>

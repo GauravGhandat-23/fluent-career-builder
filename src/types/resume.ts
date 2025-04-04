@@ -37,9 +37,20 @@ export interface Skill {
   name: string;
 }
 
+export interface Project {
+  id: string;
+  name: string;
+  description: string;
+  url?: string;
+  startDate: string;
+  endDate: string;
+  current: boolean;
+}
+
 export interface ResumeData {
   personalInfo: PersonalInfo;
   experiences: Experience[];
   education: Education[];
   skills: Skill[];
+  projects: Project[];
 }
