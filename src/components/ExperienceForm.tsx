@@ -5,10 +5,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Experience } from "@/types/resume";
-import { Sparkles, Plus, Trash2 } from "lucide-react";
+import { Sparkles, Plus, Trash2, Zap } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { v4 as uuidv4 } from "uuid";
-import { generateJobDescription } from "@/services/aiService";
+import { generateJobDescription, enhanceBulletPoints } from "@/services/aiService";
 import { toast } from "sonner";
 
 interface ExperienceFormProps {
@@ -23,6 +23,7 @@ const ExperienceForm = ({
   apiKey,
 }: ExperienceFormProps) => {
   const [generatingId, setGeneratingId] = useState<string | null>(null);
+  const [enhancingId, setEnhancingId] = useState<string | null>(null);
 
   const addExperience = () => {
     const newExperience: Experience = {
@@ -85,6 +86,34 @@ const ExperienceForm = ({
       toast.error("Failed to generate description. Please check your API key.");
     } finally {
       setGeneratingId(null);
+    }
+  };
+
+  const enhanceDescription = async (experience: Experience) => {
+    if (!apiKey) {
+      toast.error("Please enter your GROQ API key to use AI features");
+      return;
+    }
+
+    if (!experience.description.trim()) {
+      toast.warning("Please enter a description to enhance");
+      return;
+    }
+
+    try {
+      setEnhancingId(experience.id);
+      const enhancedDescription = await enhanceBulletPoints(
+        experience.description,
+        experience.title || "Professional",
+        apiKey
+      );
+      updateExperience(experience.id, "description", enhancedDescription);
+      toast.success("Description enhanced with bullet points!");
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to enhance description. Please check your API key.");
+    } finally {
+      setEnhancingId(null);
     }
   };
 
@@ -205,19 +234,34 @@ const ExperienceForm = ({
               <div>
                 <div className="flex justify-between items-center mb-1">
                   <Label className="input-label">Description</Label>
-                  <Button
-                    type="button"
-                    size="sm"
-                    variant="outline"
-                    className="flex items-center gap-1 text-xs"
-                    onClick={() => generateDescription(experience)}
-                    disabled={generatingId === experience.id}
-                  >
-                    <Sparkles size={14} />
-                    {generatingId === experience.id
-                      ? "Generating..."
-                      : "Generate with AI"}
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      className="flex items-center gap-1 text-xs"
+                      onClick={() => enhanceDescription(experience)}
+                      disabled={enhancingId === experience.id}
+                    >
+                      <Zap size={14} />
+                      {enhancingId === experience.id
+                        ? "Enhancing..."
+                        : "Enhance Bullets"}
+                    </Button>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      className="flex items-center gap-1 text-xs"
+                      onClick={() => generateDescription(experience)}
+                      disabled={generatingId === experience.id}
+                    >
+                      <Sparkles size={14} />
+                      {generatingId === experience.id
+                        ? "Generating..."
+                        : "Generate with AI"}
+                    </Button>
+                  </div>
                 </div>
                 <Textarea
                   value={experience.description}

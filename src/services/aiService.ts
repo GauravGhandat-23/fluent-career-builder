@@ -1,4 +1,3 @@
-
 interface AIResponse {
   choices: {
     message: {
@@ -97,6 +96,29 @@ export const generateSummary = async (
   - Key skills: ${skills.join(", ")}
   
   Write a concise, impactful professional summary (2-3 sentences) that highlights strengths and career goals.`;
+
+  return generateContent(prompt, apiKey);
+};
+
+export const enhanceBulletPoints = async (
+  jobDescription: string,
+  jobTitle: string,
+  apiKey: string
+): Promise<string> => {
+  if (!jobDescription.trim()) {
+    throw new Error("Please provide a job description to enhance.");
+  }
+  
+  const prompt = `Transform this plain job description into 3-4 powerful achievement-oriented bullet points for a resume. 
+  Focus on quantifiable results and use strong action verbs.
+  
+  Job title: ${jobTitle}
+  Description: ${jobDescription}
+  
+  Format each bullet point on a new line, starting with a bullet point character. 
+  Example transformation:
+  "Managed a team" → "• Led a cross-functional team of 5 members, improving project turnaround by 30%."
+  `;
 
   return generateContent(prompt, apiKey);
 };
